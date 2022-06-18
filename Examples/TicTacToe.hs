@@ -1,3 +1,5 @@
+module Examples.TicTacToe where
+
 import Data.List
 import Control.Monad
 
@@ -6,10 +8,6 @@ data TTTEntry = Circle | Cross | Empty
 type TTTLine  = [TTTEntry]
 type TTTState = [TTTLine] -- List of rows
 
-examplettt = [
-    [Circle, Circle, Cross],
-    [Empty, Cross, Empty],
-    [Circle, Cross, Empty]]
 
 drawState :: TTTState -> String
 drawState st = intercalate "\n" $ map lineDraw st
@@ -18,6 +16,11 @@ drawState st = intercalate "\n" $ map lineDraw st
             | entry == Circle = "O"
             | entry == Cross  = "X"
             | otherwise       = " "
+
+initialState :: TTTState
+initialState = take num $ repeat line 
+    where line = take num $ repeat Empty
+          num  = 3
 
 getRow :: TTTState -> Int -> TTTLine
 getRow st = (st !!)
