@@ -83,6 +83,18 @@ testIsFinished4 = TestCase (assertEqual "Finished O winning" left right)
     where left  = isFinished testState4
           right = True
 
+testNextStates0 = TestCase (assertEqual "First states" left right)
+    where left  = length $ nextStates Cross initialState
+          right = 9
+
+testNextStates1 = TestCase (assert stmt)
+    where stmt  = elem expt sts
+          sts   = nextStates Cross testState1
+          expt  = [
+            [Circle, Circle, Cross],
+            [Cross, Cross, Empty],
+            [Circle, Cross, Empty]]
+
 main_ticTacToe :: IO Counts
 main_ticTacToe  = do
     runTestTT ( test 
@@ -94,4 +106,6 @@ main_ticTacToe  = do
         , testWinCondition1
         , testWinCondition2
         , testWinCondition3
+        , testNextStates0
+        , testNextStates1
         ])

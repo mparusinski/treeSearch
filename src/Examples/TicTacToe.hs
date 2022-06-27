@@ -9,7 +9,6 @@ data TTTEntry = Circle | Cross | Empty
 type TTTLine  = [TTTEntry]
 type TTTState = [TTTLine] -- List of rows
 
-
 drawState :: TTTState -> String
 drawState st = intercalate "\n" $ map lineDraw st
     where lineDraw line = intercalate "|" $ map entryDraw line
@@ -17,6 +16,25 @@ drawState st = intercalate "\n" $ map lineDraw st
             | entry == Circle = "O"
             | entry == Cross  = "X"
             | otherwise       = " "
+
+replace :: TTTEntry -> TTTState -> (Int, Int) -> TTTState
+replace player st (rowIdx, colIdx) = do
+    (currRowIdx, currRow) <- zip [0..] st
+    if currRowIdx == rowIdx 
+        then return $ replaceRow player currRow colIdx
+        else return currRow
+    where replaceRow player currRow colIdx = do
+              (currColIdx, currEntry) <- zip [0..] currRow
+              if currColIdx == colIdx
+                  then return player
+                  else return currEntry
+
+nextStates :: TTTEntry -> TTTState -> [TTTState]
+nextStates player st = do
+    (rowNumber, row) <- zip [0..] st 
+    (colNumber, entry) <- zip [0..] row
+    guard (entry == Empty)
+    return $ replace player st (rowNumber, colNumber)
 
 initialState :: TTTState
 initialState = take num $ repeat line 
