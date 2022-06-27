@@ -39,9 +39,9 @@ testGetRow1 = TestCase (assertEqual "Get row #1" left right)
     where left  = getRow testState1 2
           right = [Circle, Cross, Empty] 
  
-testGetRow2 = TestCase (assertEqual "Get row #1" left right)
+testGetRow2 = TestCase (assertEqual "Get row #2" left right)
     where left  = getRow testState2 0
-          right = [Cross, Cross, Circle]
+          right = [Circle, Circle, Cross]
 
 testGetCol1 = TestCase (assertEqual "Get col #1" left right)
     where left  = getCol testState3 1
@@ -51,9 +51,47 @@ testGetCol2 = TestCase (assertEqual "Get col #2" left right)
     where left  = getCol testState4 2
           right = [Cross, Cross, Circle]
 
+testWinCondition1 = TestCase (assertEqual "Finished non winning" left right)
+    where left  = winCondition testState2
+          right = Nothing
+
+testWinCondition2 = TestCase (assertEqual "Finished X winning" left right)
+    where left  = winCondition testState3
+          right = Just Cross
+
+testWinCondition3 = TestCase (assertEqual "Finished O winning" left right)
+    where left  = winCondition testState4
+          right = Just Circle
+
+testWinCondition4 = TestCase (assertEqual "Initial state nothing" left right)
+    where left  = winCondition initialState
+          right = Nothing
+
+testIsFinished1 = TestCase (assertEqual "Initial state" left right)
+    where left  = isFinished initialState
+          right = False
+
+testIsFinished2 = TestCase (assertEqual "Finished non winning" left right)
+    where left  = isFinished testState2
+          right = True
+
+testIsFinished3 = TestCase (assertEqual "Finished X winning" left right)
+    where left  = isFinished testState3
+          right = True
+
+testIsFinished4 = TestCase (assertEqual "Finished O winning" left right)
+    where left  = isFinished testState4
+          right = True
+
 main_ticTacToe :: IO Counts
 main_ticTacToe  = do
-    runTestTT ( test [
-        testInitialState,
-        testGetRow1
+    runTestTT ( test 
+        [ testInitialState
+        , testGetRow1
+        , testGetRow2
+        , testGetCol1
+        , testGetCol2
+        , testWinCondition1
+        , testWinCondition2
+        , testWinCondition3
         ])
