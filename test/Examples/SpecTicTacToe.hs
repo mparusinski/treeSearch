@@ -32,7 +32,7 @@ testState4 = [
     [Cross, Cross, Circle]]
 
 testInitialState = TestCase (assertEqual "Initial state" left right)
-    where left  = initialState
+    where left  = initialBoard
           right = [[Empty, Empty, Empty], [Empty, Empty, Empty], [Empty, Empty, Empty]]
 
 testGetRow1 = TestCase (assertEqual "Get row #1" left right)
@@ -64,11 +64,11 @@ testWinCondition3 = TestCase (assertEqual "Finished O winning" left right)
           right = Just Circle
 
 testWinCondition4 = TestCase (assertEqual "Initial state nothing" left right)
-    where left  = winCondition initialState
+    where left  = winCondition initialBoard
           right = Nothing
 
 testIsFinished1 = TestCase (assertEqual "Initial state" left right)
-    where left  = isFinished initialState
+    where left  = isFinished initialBoard
           right = False
 
 testIsFinished2 = TestCase (assertEqual "Finished non winning" left right)
@@ -84,16 +84,20 @@ testIsFinished4 = TestCase (assertEqual "Finished O winning" left right)
           right = True
 
 testNextStates0 = TestCase (assertEqual "First states" left right)
-    where left  = length $ nextStates Cross initialState
+    where left  = length $ nextBoards Cross initialBoard
           right = 9
 
 testNextStates1 = TestCase (assert stmt)
     where stmt  = elem expt sts
-          sts   = nextStates Cross testState1
+          sts   = nextBoards Cross testState1
           expt  = [
             [Circle, Circle, Cross],
             [Cross, Cross, Empty],
             [Circle, Cross, Empty]]
+
+testNextStates2 = TestCase (assertEqual "Last states" left right)
+    where left  = length $ nextBoards Circle testState4
+          right = 0
 
 main_ticTacToe :: IO Counts
 main_ticTacToe  = do
@@ -108,4 +112,5 @@ main_ticTacToe  = do
         , testWinCondition3
         , testNextStates0
         , testNextStates1
+        , testNextStates2
         ])
