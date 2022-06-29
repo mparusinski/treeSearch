@@ -12,8 +12,8 @@ type TTTPlayer = TTTEntry
 type TTTLine  = [TTTEntry]
 type TTTBoard = [TTTLine] -- List of rows
 
-treeBuilderInitialState :: State TTTPlayer (Tree TTTBoard)
-treeBuilderInitialState = do
+initialTree :: State TTTPlayer (Tree TTTBoard)
+initialTree = do
     return Node {
         rootLabel = initialBoard,
         subForest = []
@@ -24,8 +24,8 @@ alternatePlayer Circle = Cross
 alternatePlayer Cross  = Circle
 alternatePlayer _      = error "Player is either Circle or Cross"
 
-treeBuilderExpand :: Tree TTTBoard -> State TTTPlayer (Tree TTTBoard)
-treeBuilderExpand tree = do
+expandTree :: Tree TTTBoard -> State TTTPlayer (Tree TTTBoard)
+expandTree tree = do
     currentPlayer <- get
     put (alternatePlayer currentPlayer)
     return $ expandTreeH currentPlayer tree
@@ -35,15 +35,15 @@ treeBuilderExpand tree = do
             where nb cp tree1 = nextBoards cp $ rootLabel tree1 
 
 -- This function is very slow as it builds the entire tree
-treeBuilderFullTree :: State TTTPlayer (Tree TTTBoard)
-treeBuilderFullTree = do
-    initialTree <- treeBuilderInitialState
-    iterateBuild initialTree
-    where iterateBuild currTree
-            | isComplete currTree = return currTree
-            | otherwise           = do
-                nextTree <- treeBuilderExpand currTree
-                iterateBuild nextTree
+-- treeBuilderFullTree :: State TTTPlayer (Tree TTTBoard)
+-- treeBuilderFullTree = do
+--     initialTree <- treeBuilderInitialState
+--     iterateBuild initialTree
+--     where iterateBuild currTree
+--             | isComplete currTree = return currTree
+--             | otherwise           = do
+--                 nextTree <- treeBuilderExpand currTree
+--                 iterateBuild nextTree
 
 isComplete :: Tree TTTBoard -> Bool
 isComplete tree
